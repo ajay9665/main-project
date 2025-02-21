@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/jalaj8009/main-project.git', branch: 'main'
+            }
+        }
+
+        stage('Deploy Using Docker Compose') {
+            steps {
+                script {
+                    dir('main-project10') {
+                        // Shutdown any running containers
+                        bat 'docker-compose down || docker-compose.exe down'
+                        // Build and start the services
+                        bat 'docker-compose up -d --build || docker-compose.exe up -d --build'
+                        // Check container status
+                        bat 'docker ps'
+                    }
+                }
+            }
+        }
+    }
+}
